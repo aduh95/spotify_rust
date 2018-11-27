@@ -34,16 +34,23 @@ fn main() -> Result<(), failure::Error> {
 
     let mut albums_data = Vec::new();
     easy_api.get_my_albums_chunk(0, &mut albums_data).unwrap();
-
-    let mut current_artist = easy_api.get_currently_playing_artist().unwrap();
-    let mut current_track = easy_api.get_currently_playing_track().unwrap();
-
+    let mut current_artist = spotify_api::Artist {
+        name: String::new(),
+        id: String::new(),
+        albums: None,
+    };
+    let mut current_track = spotify_api::Track {
+        name: String::new(),
+        id: String::new(),
+        artist: Some(&current_artist),
+    };
     // Terminal initialization
     let stdout = io::stdout().into_raw_mode()?;
     let stdout = MouseTerminal::from(stdout);
     let stdout = AlternateScreen::from(stdout);
     let backend = TermionBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
+    let mut tracks_added = Vec::new();
     terminal.hide_cursor()?;
 
     let events = Events::new();
@@ -135,9 +142,9 @@ fn main() -> Result<(), failure::Error> {
                         if albums_pane.selected >= albums_pane.albums.len() - 1 {
                             // Adding next 20 albums to the list if there is some albums left
                             let before_size = albums_pane.albums.len();
-                            easy_api
-                                .get_my_albums_chunk(20 * pages_loaded, &mut albums_pane.albums)
-                                .unwrap();
+                           // easy_api
+                           //     .get_my_albums_chunk(20 * pages_loaded, &mut albums_pane.albums)
+                           //     .unwrap();
                             // if we got to the end of a user's album list
                             if before_size == albums_pane.albums.len() {
                                 end_of_albums = true;
@@ -185,18 +192,18 @@ fn main() -> Result<(), failure::Error> {
                 }
                 Key::Right => {
                     if tracks_pane.active {
-                        easy_api
-                            .play_track(
-                                &tracks_pane.tracks[tracks_pane.selected],
-                                albums_pane.get_selected_album(),
-                            ).unwrap();
+                        //easy_api
+                        //    .play_track(
+                          //      &tracks_pane.tracks[tracks_pane.selected],
+                          //      albums_pane.get_selected_album(),
+                          //  ).unwrap();
                     } else {
-                        let mut tracks_added = easy_api
+                        tracks_added = easy_api
                             .get_tracks_from_album(&albums_pane.albums[albums_pane.selected].id)
                             .unwrap();
 
                         tracks_pane.clear_tracks();
-                        tracks_pane.add_tracks(&mut tracks_added);
+                        tracks_pane.add_tracks(&tracks_added);
                         tracks_pane.active = true;
                         albums_pane.active = false;
                     }
@@ -205,8 +212,18 @@ fn main() -> Result<(), failure::Error> {
                 _ => {}
             },
             Event::Tick => {
-                current_artist = easy_api.get_currently_playing_artist().unwrap();
-                current_track = easy_api.get_currently_playing_track().unwrap();
+                // match easy_api.get_currently_playing_artist() {
+                //     Ok(result) => {
+                //         current_artist = result;
+                //     }
+                //     Err(_error) => {}
+                // }
+                // match easy_api.get_currently_playing_track() {
+                //     Ok(result) => {
+                //         current_track = result;
+                //     }
+                //     Err(_error) => {}
+                // }
             }
         }
     }

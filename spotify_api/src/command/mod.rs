@@ -66,9 +66,15 @@ impl Command {
             &mut result,
         );
     }
-    pub fn pause(&self) -> Result<(), std::io::Error>{unimplemented!()}
-    pub fn next(&self) -> Result<(), std::io::Error>{unimplemented!()}
-    pub fn search(&mut self, _name: &str, _type: &str, result: &mut String) -> Result<(), std::io::Error>{
+    pub fn pause(&self) -> Result<(), std::io::Error> {
+        unimplemented!()
+    }
+    pub fn search(
+        &mut self,
+        _name: &str,
+        _type: &str,
+        result: &mut String,
+    ) -> Result<(), std::io::Error> {
         let mut list_headers = List::new();
         let _auth = format!(
             "{}{}",

@@ -17,31 +17,31 @@ pub struct EasyAPI {
 }
 /// Track structure that represents a spotify track, with its name, Artist and Spotify ID.
 #[derive(Debug, Clone)]
-pub struct Track {
+pub struct Track<'a> {
     pub name: String,
     pub id: String,
-    pub artist: Option<Artist>,
+    pub artist: Option<&'a Artist<'a>>,
 }
 /// Album structure that represents a spotify album, with its name, Spotify ID, and a Vector of Tracks
 #[derive(Debug, Clone)]
-pub struct Album {
+pub struct Album<'a> {
     pub name: String,
     pub id: String,
-    pub tracks: Option<Vec<Track>>,
+    pub tracks: Option<&'a Vec<Track<'a>>>,
 }
 /// Artist structure that represents an Artist, with its name, Spotify ID, and a Vector of Albums
 #[derive(Debug, Clone)]
-pub struct Artist {
+pub struct Artist<'a> {
     pub name: String,
     pub id: String,
-    pub albums: Option<Vec<Album>>,
+    pub albums: Option<&'a Vec<Album<'a>>>,
 }
 /// Playlist structure that represents a Playlist, with its name, Spotify ID, and a Vector of Tracks
 #[derive(Debug, Clone)]
-pub struct Playlist {
+pub struct Playlist<'a> {
     pub name: String,
     pub id: String,
-    pub tracks: Option<Vec<Track>>,
+    pub tracks: Option<&'a Vec<Track<'a>>>,
 }
 impl EasyAPI {
     /// Creates a EasyAPI handle
